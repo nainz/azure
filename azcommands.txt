@@ -1,0 +1,21 @@
+13bf1a7d-1888-4a42-9ba3-b23763ba4a55
+login:
+az login
+
+
+
+select subscription:
+az account set --subscription 13bf1a7d-1888-4a42-9ba3-b23763ba4a55
+
+http://localhost:7071/api/HttpExample/?name=chudu
+
+create storage account:
+az storage account create --name funcstg001 --location eastus2 --resource-group Testing2 --sku Standard_LRS
+
+
+create function app:
+az functionapp create --resource-group Testing2 --consumption-plan-location eastus2 --runtime dotnet --functions-version 2 --name mrtestfunc --storage-account funcstg001
+
+publish azure function 
+
+func azure functionapp publish mrtestfunc

@@ -1,0 +1,287 @@
+sudousername=   openvpn  
+password=   $Njay9796237928
+
+
+createduser= singhs
+password=   $Njay8139905015
+
+
+new user= sudo adduser chudu
+
+password=  $Njay9796237927
+
+
+openvpn url= https://40.74.226.29:943/admin
+
+
+windows vmname:  vm-evoque-win
+
+usernmae: chudu1
+password= divSaru4@chuddu1
+
+
+virtualnetwork= vng2
+vnt= 10.1.0.0/16
+subnet name= sub2
+subnet= 10.1.1.0/24
+
+
+vnetTesting-vm for vnet testing---
+
+username= singhs
+Password= $Njay8139905015
+
+
+DDOS PROTECTION and
+FIREWALL--- pending.
+
+........................
+https://docs.microsoft.com/en-us/azure/firewall/tutorial-firewall-deploy-portal
+
+Azure firewall config:
+1. resource group= Test-FW-RG
+2. vnet= Test-FW-VN ---- 10.1.0.0/16
+3. Subnet name= AzureFirewallSubnet 10.1.1.0/24
+4. subnet2= Workload-SN  10.1.2.0/24
+5. subnet3= Jump-SN  10.1.3.0/24
+
+Virtual machine config   = Jump server
+
+Setting                  =	Value
+Resource group	         = Test-FW-RG
+Virtual machine name	 = Srv-Jump
+Region	                 = Same as previous(eastus)
+Administrator user name	 = azureuser
+Password	             = Azure123456!
+jump  server public ip   = Srv-Jump-ip
+
+
+Virtual machine config       = load server
+
+Setting	                     = Value
+Subnet	                     = Workload-SN
+Public IP	                 = None
+Public inbound ports	     = None
+server name                  = Srv-Work
+Resource group	             = Test-FW-RG
+Region	                     = Same as previous(eastus)
+Administrator user name	     = azureuser
+Password	                 = Azure123456!
+
+
+ Firewall config:
+ Resource group= Test-FW-RG
+ Firewall Name=  Test-FW01
+ virtual network = Test-FW-VN
+ Public IP address- Firewall-publicip
+ Firewall Private ip= 10.1.1.4
+ 
+ Create a default route:
+ ROUTE TABLE NAME: Firewall-route
+ Location- east us
+ resource group= Test-FW-RG
+ virtualnetwork= Test-FW-VN
+ subnet= Workload-SN
+ Route name= fw-dg
+ Firewall private ip= 10.1.1.4
+ 
+ Configure an  firewall application rule: 
+ This is the application rule that allows outbound access to www.google.com.
+ 
+ application rule collection  Name=  App-Coll01
+  Priority, type 200
+  targetfddn name: 
+  Target fgdn= www.google.com
+  source= 10.1.2.0/24, 
+  protocol= http, https
+  ..........................................................................................................
+Open the Test-FW-RG, and select the Test-FW01 firewall.
+On the Test-FW01 page, under Settings, select Rules.
+Select the Application rule collection tab.
+Select Add application rule collection.
+For Name, type App-Coll01.
+For Priority, type 200.
+For Action, select Allow.
+Under Rules, Target FQDNs, for Name, type Allow-Google.
+For Source type, select IP address.
+For Source, type 10.1.2.0/24.
+For Protocol:port, type http, https.
+For Target FQDNS, type www.google.com
+Select Add.
+  ...............................................................................................................
+  
+  
+  
+  
+  
+  Configure a network rule: This is the network rule that allows outbound access to two IP addresses at port 53 (DNS)
+  Add network rule collection
+  Name= Net-Coll01
+  port= 200
+  source= 10.1.2.0/24
+  destination port= 53
+  protocol= udp
+  ......................................................................................................
+  Configure a network rule
+This is the network rule that allows outbound access to two IP addresses at port 53 (DNS).
+
+Select the Network rule collection tab.
+
+Select Add network rule collection.
+
+For Name, type Net-Coll01.
+
+For Priority, type 200.
+
+For Action, select Allow.
+
+Under Rules, IP addresses, for Name, type Allow-DNS.
+
+For Protocol, select UDP.
+
+For Source type, select IP address.
+
+For Source, type 10.1.2.0/24.
+
+For Destination address, type 209.244.0.3,209.244.0.4
+
+These are public DNS servers operated by CenturyLink.
+
+For Destination Ports, type 53.
+
+Select Add.
+  
+  
+  .........................................................................................
+  
+  Change the primary and secondary DNS address for the Srv-Work network interface
+  
+ DNS servers =  Type 209.244.0.3 in the Add DNS server text box, and 209.244.0.4
+  
+  ..........................................................................................
+  
+ For testing purposes in this tutorial, configure the server's primary and secondary DNS addresses. This isn't a general Azure Firewall requirement.
+
+On the Azure portal menu, select Resource groups or search for and select Resource groups from any page. Select the Test-FW-RG resource group.
+Select the network interface for the Srv-Work virtual machine.
+Under Settings, select DNS servers.
+Under DNS servers, select Custom.
+Type 209.244.0.3 in the Add DNS server text box, and 209.244.0.4 in the next text box.
+Select Save.
+Restart the Srv-Work virtual machine.
+.....................................................................................................
+
+ Testing the firewall:
+  
+ Private ip of Srv-Work vm 10.1.2.4
+ 
+ 
+ 
+ 
+  ......................
+  1. Configuration of VPN server deployment: ETUS- eastus, scus= south central us
+  resourcename= Testing2
+  vnet= Vnet0-vpn-ETUS
+  subnet= sub0-Vnet0-ETUS
+  nsg= nsg0-sub0-Vnet0-ETUS
+  
+  
+  subnet= sub1-Vnet0-ETUS
+  nsg= nsg1-sub1-Vnet0-ETUS
+  
+  region- south central us
+  Vnet= Vnet1-SCUS
+  subnet= sub2-Vnet1-SCUS
+  nsg= nsg1-sub2-Vnet1-SCUS
+  
+  ................................................
+  server name= vpn-srv-ETUS
+  user= azureuser
+  password= $Njay9796237928
+  client_user = john
+  paswword= $Njay9796237928
+  
+............. . ...............................
+Prod server config--
+ETUS- eastus 
+server  name= prod-srv-ETUS01
+user= azureuser
+password= $Njay9796237928
+
+...............................
+Test server config--
+scus= south central us
+server name= Test-srv-scus01
+user= amit
+password= $Njay9796237928
+...................
+
+with https://20.190.244.36:943/admin
+  
+  
+  20.190.244.36
+  
+  
+  https://20.190.244.36
+  
+  ...........................................
+  Application gateway configuration- 
+  name= app-gtw-scus
+  location= south central us
+  
+  
+  vm= testingvmloadb,  testingvmloadb2
+  
+  Set-AzVMExtension `
+  -ResourceGroupName Testing1 `
+  -ExtensionName IIS `
+  -VMName testingvmloadb2 `
+  -Publisher Microsoft.Compute `
+  -ExtensionType CustomScriptExtension `
+  -TypeHandlerVersion 1.4 `
+  -SettingString '{"commandToExecute":"powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"}' `
+  -Location 'South Central US'
+  
+  ........................
+  Set-AzVMExtension `
+  -ResourceGroupName Testing1 `
+  -ExtensionName IIS `
+  -VMName testingvmloadb `
+  -Publisher Microsoft.Compute `
+  -ExtensionType CustomScriptExtension `
+  -TypeHandlerVersion 1.4 `
+  -SettingString '{"commandToExecute":"powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"}' `
+  -Location 'South Central US'
+ 
+ 
+ 
+ ............................
+ VNG Creation and deployment
+ vnet= vnet1-vng-scus
+ adress space= 10.0.0.0/16
+ subnet= default
+ gatewaysubnet name=    sub1-vnet1-vng-scus
+ adress space= 10.0.2.0/24
+ 
+ vng name= Mrvng-vnet1-vng-scus
+ 
+ 
+ $Njay9796237928
+ 
+ ...................
+ EXPRESS ROOUTE
+ KSAYSIKHSKDSDH
+ 
+ .......................
+ 
+ aws 
+ user:ssingh1
+ $Njay9796237928
+ 
+Secret access key= h6DnlyNy1NHgtMXwy0SsO0wlfZ38qqqcQ1BbKlL3
+Access key ID = AKIA2EESXEV3JPL7BT6F
+ 
+
+az aks update 
+ 
+ 
